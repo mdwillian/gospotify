@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 
-import { expression } from '@babel/template';
 import SearchIcon from '../../assets/images/search.svg';
 
 export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 10px 28px 0;
+  margin: 10px 0 0;
 `;
 
 export const Search = styled.div`
