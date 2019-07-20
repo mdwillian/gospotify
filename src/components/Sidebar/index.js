@@ -24,10 +24,14 @@ class Sidebar extends Component {
   };
 
   componentDidMount() {
-    this.props.getPlaylistsRequest();
+    const { getPlaylistsRequest } = this.props;
+
+    getPlaylistsRequest();
   }
 
   render() {
+    const { playlists } = this.props;
+
     return (
       <Container>
         <div>
@@ -77,7 +81,7 @@ class Sidebar extends Component {
             <li>
               <span>PLAYLISTS</span>
             </li>
-            {this.props.playlists.data.map(playlist => (
+            {playlists.data.map(playlist => (
               <li key={playlist.id}>
                 <Link to={`playlists/${playlist.id}`}>{playlist.title}</Link>
               </li>
