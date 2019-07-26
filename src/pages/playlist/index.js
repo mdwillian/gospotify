@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Creators as PlaylistDetailsActions } from '../../store/ducks/playlistDetails';
+import { Creators as PlayerActions } from '../../store/ducks/player';
 
 import { Container, Header, SongList } from './styles';
 
@@ -20,7 +21,7 @@ class Playlist extends Component {
       }),
     }).isRequired,
     getPlaylistDetailsRequest: PropTypes.func.isRequired,
-    playlistDetais: PropTypes.shape({
+    playlistDetails: PropTypes.shape({
       data: PropTypes.shape({
         thumbnail: PropTypes.string,
         title: PropTypes.string,
@@ -36,6 +37,7 @@ class Playlist extends Component {
       }),
       loading: PropTypes.bool,
     }).isRequired,
+    loadSong: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
@@ -43,19 +45,24 @@ class Playlist extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
+    const { match } = this.props;
+    if (prevProps.match.params.id !== match.params.id) {
       this.loadPlaylistDetails();
     }
   }
 
   loadPlaylistDetails = () => {
-    const { id } = this.props.match.params;
+    const { getPlaylistDetailsRequest, match } = this.props;
+    const { id } = match.params;
 
-    this.props.getPlaylistDetailsRequest(id);
+    getPlaylistDetailsRequest(id);
   };
 
   renderDetails = () => {
-    const playlist = this.props.playlistDetails.data;
+    const {
+      playlistDetails: { data: playlist },
+      loadSong,
+    } = this.props;
 
     return (
       <Container>
@@ -89,7 +96,7 @@ class Playlist extends Component {
               </tr>
             ) : (
               playlist.songs.map(song => (
-                <tr key={song.id}>
+                <tr key={song.id} onDoubleClick={() => loadSong(song)}>
                   <td>
                     <img src={PlusIcon} alt="Adicionar" />
                   </td>
@@ -107,8 +114,8 @@ class Playlist extends Component {
   };
 
   render() {
-    const { loading } = this.props.playlistDetails;
-    return loading ? (
+    const { playlistDetails } = this.props;
+    return playlistDetails.loading ? (
       <Container loading>
         <Loading />
       </Container>
@@ -122,7 +129,7 @@ const mapStateToProps = state => ({
   playlistDetails: state.playlistDetails,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(PlaylistDetailsActions, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ ...PlaylistDetailsActions, ...PlayerActions }, dispatch);
 
 export default connect(
   mapStateToProps,

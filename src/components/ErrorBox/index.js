@@ -9,7 +9,7 @@ import { Container } from './styles';
 
 import CloseIcon from '../../assets/images/close.svg';
 
-const ErrorBox = ({ error: { message, visible } }, hideError) => visible && (
+const ErrorBox = ({ error: { message, visible }, hideError }) => visible && (
 <Container>
   <p>{message}</p>
   <button type="button" onClick={hideError}>
